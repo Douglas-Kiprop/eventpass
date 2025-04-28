@@ -1,0 +1,61 @@
+---
+description: Defines the detailed project directory structure for EventPass.
+alwaysApply: true
+---
+
+# EventPass Project Structure
+
+This document outlines the standard monorepo directory structure for the EventPass project, including key files and subdirectories. Adhering to this structure ensures consistency and facilitates collaboration between different agents and components.
+
+## Project Root (`/`)
+
+-   `/contracts`: Contains all Solidity smart contracts.
+    -   `TicketNFT.sol`: ERC-721 NFT ticket contract.
+    -   `PaymentHandler.sol`: USDC payment handling contract (integrates CDP Paymaster).
+    -   `EventRegistry.sol`: Onchain event data management contract.
+    -   `/deploy`: Hardhat deployment scripts for Base Sepolia.
+    -   `/scripts`: Utility scripts for contract interaction.
+    -   `/test`: Hardhat/Mocha/Chai tests for contracts.
+-   `/frontend`: Contains the Next.js dApp interface.
+    -   `/app`: Next.js App Router directory structure.
+        -   `/`(page).tsx: Home/landing page.
+        -   `/event/[eventId]`/(page).tsx: Dynamic route for event details and purchasing.
+        -   `/mint`/(page).tsx: Minting confirmation page.
+        -   `/layout.tsx`: Root layout.
+        -   `/api`: API routes (if needed for server-side logic within Next.js).
+    -   `/components`: Reusable React components (e.g., WalletConnect button, NFTDisplay, EventCard).
+    -   `/lib` or `/utils`: Utility functions, constants, wagmi/ethers setup, CDP SDK integration helpers (`cdp.js`).
+    -   `/styles`: Global styles and Tailwind CSS configuration (`globals.css`, `tailwind.config.js`).
+    -   `/public`: Static assets (images, fonts).
+-   `/backend`: Contains the Node.js backend service (Express.js + Supabase).
+    -   `/src`: Source code for the backend.
+        -   `/routes`: API route definitions (e.g., `events.js`, `organizer.js`).
+        -   `/controllers`: Request handling logic for API routes.
+        -   `/services`: Business logic (e.g., interacting with Supabase, blockchain).
+        -   `/utils`: Utility functions (e.g., Supabase client setup, error handling).
+        -   `server.js` or `index.js`: Main application entry point.
+    -   `/test`: Jest tests for backend APIs and services.
+-   `/docs`: Contains project documentation.
+    -   `README.md`: Detailed project overview, setup, architecture.
+    -   `/tasks`: Task lists for agents.
+    -   `/hackathon`: Pitch deck, demo video script, submission materials.
+-   `/.trae/rules`: Contains Trae AI IDE rule files (`.mdc`).
+    -   `backend.mdc`
+    -   `cdp-integrations.mdc`
+    -   `frontend-guidelines.mdc`
+    -   `project-structure.mdc` (This file)
+    -   `smart-contracts.mdc`
+    -   `task-management.mdc`
+    -   `testing-guidelines.mdc`
+-   `hardhat.config.js`: Configuration for Hardhat (networks, compiler, etc.).
+-   `package.json`: Project dependencies and scripts (consider using workspaces for monorepo management).
+-   `tsconfig.json`: TypeScript configuration (if using TypeScript).
+-   `.env.example`: Example environment variables.
+-   `.gitignore`: Specifies intentionally untracked files that Git should ignore.
+
+## Notes
+
+-   Ensure sensitive information like API keys (`CDP_API_KEY`, `SUPABASE_KEY`) are stored in `.env` files and added to `.gitignore`.
+-   The `/tests` directory mentioned in the initial prompt might be consolidated within each respective package (`/contracts/test`, `/frontend/test`, `/backend/test`) which is common practice. This structure reflects that consolidation.
+
+Adherence to this structure is mandatory for all agents working on the EventPass project.

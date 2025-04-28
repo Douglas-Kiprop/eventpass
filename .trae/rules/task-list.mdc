@@ -1,0 +1,127 @@
+# EventPass Development Tasks
+
+## Smart Contract Development Tasks
+
+### Core Contracts
+- [x] Draft `TicketNFT.sol` contract.
+- [x] Draft `PaymentHandler.sol` contract.
+- [x] Draft `EventRegistry.sol` contract.
+- [x] Integrate `EventRegistry` calls into `PaymentHandler`.
+
+### Configuration & Setup
+- [x] Configure Hardhat environment (`hardhat.config.js`).
+- [x] Set up environment variables (`.env` file).
+
+### Refinement & Testing
+- [x] Refine contracts (e.g., add `SafeERC20`, improve error handling, add events).
+- [x] Write unit tests for `TicketNFT.sol`.
+- [x] Write unit tests for `EventRegistry.sol`.
+- [x] Write unit tests for `PaymentHandler.sol`.
+- [x] Write integration tests.
+
+### Deployment & Post-Deployment
+- [x] Write deployment script(s) for all contracts.
+- [x] Deploy contracts to Base Sepolia testnet.
+- [x] Transfer ownership of `TicketNFT` contract to the deployed `PaymentHandler` address.
+- [x] Verify contracts on Basescan.
+
+## Frontend Development Tasks
+
+### Project Setup
+- [x] Initialize Next.js project in `/frontend` with App Router and Tailwind CSS.
+  - Run `npx create-next-app@latest frontend --js --tailwind --app`.
+  - Selected **Yes** to use a `src/` directory for project files.
+  - Selected **Yes** to use Turbopack for `next dev`.
+  - Selected **Yes** to customize the import alias, set to `@eventpass/*`.
+  - **Status**: Completed - Project initialized with `src/`, Turbopack enabled, and import alias `@eventpass/*`.
+- [x] Install frontend dependencies. // Updated this line
+  - Run `cd frontend && npm install wagmi @coinbase/onchainkit @neynar/minikit @coinbase/coinbase-sdk`. // Corrected package name
+  - **Status**: Completed (wagmi, onchainkit, coinbase-sdk installed). `@neynar/minikit` failed (404 Not Found) - will address later.
+- [x] Configure wagmi for Base Sepolia (chain ID 84532) in `/frontend/src/utils/wagmi.js`.
+  - Include `PaymentHandler` and `EventRegistry` contract ABIs and addresses.
+  - Added MetaMask (`injected`) connector.
+- [x] Set up project structure (using App Router). // Updated this section
+  - Landing page: `/frontend/src/app/page.js` (exists).
+  - Event details page: `/frontend/src/app/event/[eventId]/page.js` (created).
+  - Minting confirmation page: `/frontend/src/app/mint/page.js` (created).
+  - Wallet connection component: `/frontend/src/components/WalletConnect.js` (created).
+  - Pricing utility: `/frontend/src/utils/pricing.js` (created).
+  - **Status**: Completed - Directories and empty files created for App Router structure.
+
+### Core Functionality
+- [x] Build landing page in `/frontend/src/app/page.js`. // Updated path
+  - Display a welcome message and options for wallet creation and USDC purchase.
+  - Add a "Get Started" button to redirect to `/event/[eventId]` (e.g., `/event/1` for testing).
+  - Style with Tailwind CSS (mobile-first, responsive, dark theme inspired by 21st.dev).
+- [ ] Integrate CDP Wallet API for new user wallet creation on the landing page.
+  - Add a "Create Wallet" button in `/frontend/src/app/page.js` for users without wallets. // Updated path
+  - Use Wallet API to generate a smart wallet for new users.
+  - Display the new wallet address upon creation.
+- [ ] Integrate CDP Onramp for fiat-to-USDC purchases on the landing page.
+  - Add an Onramp UI component to `/frontend/src/app/page.js`. // Updated path
+  - Allow users to buy USDC with fiat before proceeding to the event page.
+- [ ] Implement wallet connection component in `/frontend/src/components/WalletConnect.js`.
+  - Use OnchainKit to connect to Base Sepolia.
+  - Display connected wallet address and disconnect option.
+  - Make the component globally accessible via `/frontend/src/app/layout.js`. // Updated path for App Router global layout
+- [ ] Build event details page in `/frontend/src/app/event/[eventId]/page.js`. // Updated path
+  - Fetch event data (name, date, price, tickets available) via Backend API (mock if not available, e.g., `{ id: "1", name: "Boxing Match", date: "2025-05-01", price: "10", maxTickets: 100, ticketsSold: 50 }`).
+  - Display event details in a card with Tailwind CSS (mobile-first, responsive, dark theme inspired by 21st.dev).
+  - Add a "Buy Now" button that triggers USDC payment and automatic NFT minting.
+- [ ] Implement USDC payment and automatic NFT minting flow.
+  - Use wagmi to call `USDC.approve` for the ticket price.
+  - Call `PaymentHandler.purchaseTicket` to process payment and mint NFT in a single transaction.
+  - On success, automatically redirect to `/mint` page to view the minted NFT.
+  - Handle errors (e.g., insufficient USDC, sold-out event) with user-friendly messages in a modal.
+- [ ] Build minting confirmation page in `/frontend/src/app/mint/page.js`. // Updated path
+  - Display the already-minted NFT’s metadata (event ID, name, date).
+  - Add a "Share on Warpcast" button using MiniKit.
+  - Style with Tailwind CSS (dark theme, 21st.dev-inspired design).
+- [ ] Write Jest tests for frontend components.
+  - Test `app/page.js` for rendering and navigation. // Updated path
+  - Test `WalletConnect.js` for connection/disconnection.
+  - Test `app/event/[eventId]/page.js` for rendering and payment/minting flow. // Updated path
+  - Test `app/mint/page.js` for NFT display and Warpcast sharing. // Updated path
+
+### Advanced Features & CDP Integrations
+- [ ] Integrate CDP AgentKit for AI-driven dynamic pricing.
+  - Use AgentKit API in `/frontend/src/utils/pricing.js` to suggest ticket prices based on demand (e.g., tickets sold).
+  - Display suggested price on the event page (e.g., "Price may increase soon: $10").
+- [ ] Integrate CDP Pricing API for real-time USDC/USD prices.
+  - Fetch USDC/USD price in `/frontend/src/utils/pricing.js`.
+  - Display ticket price in USD alongside USDC on the event page (e.g., "10 USDC ($10.00)").
+- [ ] Integrate CDP OnchainKit for enhanced wallet interactions.
+  - Already used for wallet connection; ensure compatibility with Base Sepolia.
+  - Add balance display (USDC balance) in `WalletConnect.js` using OnchainKit utilities.
+- [ ] Explore CDP Staking API integration.
+  - If applicable, allow users to stake USDC earned from referrals (if a referral system is added).
+  - Alternatively, document Staking API as a future feature for organizers to stake event earnings.
+- [ ] Integrate CDP Paymaster for gasless transactions.
+  - Modify `PaymentHandler.sol` to support Paymaster-sponsored transactions.
+  - Redeploy and verify updated contract on Base Sepolia.
+  - Update frontend to handle gasless transactions.
+- [ ] Write Jest tests for CDP integrations.
+  - Test AgentKit price suggestions.
+  - Test Pricing API price display.
+  - Test OnchainKit balance display.
+  - Test Paymaster gasless transactions.
+
+### Deployment
+- [ ] Deploy frontend to Vercel.
+  - Run `vercel deploy` in `/frontend`.
+- [ ] Test QR code flow with backend and contracts.
+  - Ensure QR code redirects to `/event/[eventId]`.
+  - Verify wallet connection, payment, minting, and navigation to `/mint`.
+- [ ] Document deployed frontend URL.
+  - Add to `/docs/deployment.md`.
+
+## Future Sections (To Be Added)
+
+### Backend Development Tasks
+- [ ] To be defined: Set up Express.js, Supabase, and APIs for event management and analytics.
+
+### Testing Development Tasks
+- [ ] To be defined: Write Jest tests for frontend/backend, integration tests, and end-to-end tests.
+
+### Documentation Tasks
+- [ ] To be defined: Write README, document contract/frontend/backend details, prepare hackathon deliverables.
