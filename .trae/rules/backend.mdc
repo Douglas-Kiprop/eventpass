@@ -1,0 +1,20 @@
+
+---
+
+### 3. backend-supabase.mdc
+```markdown
+---
+description: Guidelines for Node.js backend with Supabase integration
+globs: backend/**/*.js
+alwaysApply: true
+---
+# Backend and Supabase Guidelines
+
+Guidelines for developing the Node.js backend and Supabase integration for the EventPass organizer dashboard.
+
+## Supabase Setup
+
+- Create a Supabase project and store credentials in `/backend/.env`:
+  ```env
+  SUPABASE_URL=https://your-project.supabase.co
+  SUPABASE_KEY=your-key

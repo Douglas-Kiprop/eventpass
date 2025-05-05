@@ -1,0 +1,19 @@
+
+---
+
+### 6. cdp-integrations.mdc
+```markdown
+---
+description: Guidelines for integrating Coinbase Developer Platform APIs
+globs: frontend/utils/cdp.js, backend/utils/cdp.js
+alwaysApply: true
+---
+# CDP Integrations
+
+Guidelines for integrating Coinbase Developer Platform (CDP) APIs into EventPass for wallet management, payments, and AI features.
+
+## Setup
+
+- Store CDP API key in `.env` files for frontend and backend:
+  ```env
+  CDP_API_KEY=your-cdp-api-key

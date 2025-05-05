@@ -1,0 +1,80 @@
+
+---
+
+### 4. testing-guidelines.mdc
+```markdown
+---
+description: Guidelines for testing smart contracts, frontend, and backend
+globs: tests/**/*.js
+alwaysApply: true
+---
+# Testing Guidelines
+
+Guidelines for ensuring code quality through comprehensive testing of EventPass components.
+
+## Testing Frameworks
+
+- Smart contracts: Hardhat with Mocha and Chai.
+- Frontend: Jest with React Testing Library.
+- Backend: Jest for API and Supabase interactions.
+
+## Test Structure
+
+- Smart contracts:
+  - Place tests in `/tests/contracts` with `.test.js` suffix (e.g., `TicketNFT.test.js`).
+  - Test all functions and edge cases (e.g., sold-out events, insufficient USDC).
+  - Example:
+    ```javascript
+    const { expect } = require('chai');
+    describe('TicketNFT', () => {
+        it('mints NFT only by PaymentHandler', async () => {
+            const [user, paymentHandler] = await ethers.getSigners();
+            const ticketNFT = await ethers.deployContract('TicketNFT', [paymentHandler.address]);
+            await expect(ticketNFT.connect(user).mintTicket(user.address, 1, 'Event', '2025-05-01'))
+                .to.be.revertedWith('Only PaymentHandler can mint');
+        });
+    });
+    ```
+- Frontend:
+  - Place tests in `/tests/frontend` (e.g., `WalletConnect.test.js`).
+  - Test UI rendering and user interactions.
+  - Example:
+    ```javascript
+    import { render, screen } from '@testing-library/react';
+    import WalletConnect from '../components/WalletConnect';
+    test('renders connect wallet button', () => {
+        render(<WalletConnect />);
+        expect(screen.getByText(/Connect Wallet/i)).toBeInTheDocument();
+    });
+    ```
+- Backend:
+  - Place tests in `/tests/backend` (e.g., `events.test.js`).
+  - Mock Supabase and ethers.js dependencies.
+  - Example:
+    ```javascript
+    import request from 'supertest';
+    import { app } from '../index';
+    jest.mock('@supabase/supabase-js');
+    test('fetches event details', async () => {
+        supabase.from().select.mockResolvedValue({ data: [{ event_id: 1, event_name: 'Boxing Match' }] });
+        const res = await request(app).get('/events/1');
+        expect(res.status).toBe(200);
+        expect(res.body.event_name).toBe('Boxing Match');
+    });
+    ```
+
+## Best Practices
+
+- Ensure tests are independent and do not rely on shared state.
+- Mock external dependencies:
+  - Mock USDC contract:
+    ```javascript
+    const usdc = await ethers.deployContract('MockUSDC');
+    ```
+  - Mock Supabase:
+    ```javascript
+    jest.mock('@supabase/supabase-js');
+    ```
+- Clean up mocks between tests:
+  ```javascript
+  beforeEach(() => jest.clearAllMocks());

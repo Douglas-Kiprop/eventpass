@@ -1,0 +1,26 @@
+---
+description: Guidelines for developing Solidity smart contracts on Base
+globs: contracts/*.sol
+alwaysApply: true
+---
+# Smart Contract Development
+
+Guidelines for writing, testing, and deploying Solidity smart contracts for EventPass on the Base blockchain.
+
+## Contract Structure
+
+- All smart contracts must use Solidity version `^0.8.20`.
+- Contracts must follow this structure for consistency:
+  ```solidity
+  // SPDX-License-Identifier: MIT
+  pragma solidity ^0.8.20;
+
+  import "@openzeppelin/contracts/...";
+
+  contract ContractName {
+      // State variables
+      // Constructor
+      // Modifiers
+      // Functions
+      // Events
+  }

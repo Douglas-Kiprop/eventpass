@@ -1,0 +1,47 @@
+
+---
+
+### 5. task-management.mdc
+```markdown
+---
+description: Guidelines for managing tasks across agents
+globs: *.md
+alwaysApply: false
+---
+# Task Management
+
+Guidelines for creating and maintaining task lists to track EventPass development progress across agents.
+
+## Task List Creation
+
+- Create a task list for each agent in the project root:
+  - `TASKS-SC.md`: For Smart Contract Agent.
+  - `TASKS-FE.md`: For Frontend Agent.
+  - `TASKS-BE.md`: For Backend Agent.
+  - `TASKS-Test.md`: For Testing Agent.
+  - `TASKS-Doc.md`: For Documentation Agent.
+- Structure each task list with the following sections:
+  ```markdown
+  # Agent Name Tasks
+
+  Description of the agent's responsibilities and scope.
+
+  ## Completed Tasks
+
+  - [x] Task 1 description
+
+  ## In Progress Tasks
+
+  - [ ] Task 2 description
+
+  ## Future Tasks
+
+  - [ ] Task 3 description
+
+  ## Implementation Plan
+
+  Detailed steps for completing tasks, including dependencies and technical decisions.
+
+  ### Relevant Files
+
+  - path/to/file - Purpose and status (e.g., ✅ Completed, 🚧 In Progress, 🔲 Planned)

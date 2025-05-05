@@ -1,0 +1,50 @@
+
+---
+
+### 2. frontend-guidelines.mdc
+```markdown
+---
+description: Guidelines for building the Next.js frontend with OnchainKit and CDP APIs
+globs: frontend/**/*.js
+alwaysApply: true
+---
+# Frontend Guidelines
+
+Guidelines for developing the EventPass Next.js dApp interface for user-facing ticket purchases and NFT minting.
+
+## Structure
+
+- Pages are located in `/frontend/pages`:
+  - `event/[eventId].js`: Displays event details and payment button.
+  - `mint.js`: Shows NFT minting status and social sharing options.
+- Components are in `/frontend/components`:
+  - `WalletConnect.js`: Handles wallet connection with OnchainKit.
+  - `NFTDisplay.js`: Displays minted NFT details.
+- Utilities are in `/frontend/utils`:
+  - `cdp.js`: Wrappers for CDP API calls.
+  - `wallet.js`: Helpers for wallet interactions.
+- Styles are in `/frontend/styles` using Tailwind CSS.
+
+## Implementation Guidelines
+
+- Use Next.js App Router for all pages:
+  - Create dynamic routes for events: `/frontend/pages/event/[eventId].js`.
+  - Example:
+    ```javascript
+    import { useRouter } from 'next/router';
+    export default function EventPage() {
+        const { eventId, eventName, eventDate } = useRouter().query;
+        return <div>{eventName} - {eventDate}</div>;
+    }
+    ```
+- Integrate OnchainKit for wallet connection:
+  ```javascript
+  import { ConnectWallet } from '@coinbase/onchainkit';
+  export default function WalletConnect() {
+      return (
+          <ConnectWallet
+              appMetadata={{ name: "EventPass", icon: "/logo.png" }}
+              chainId={84532} // Base Sepolia
+          />
+      );
+  }
