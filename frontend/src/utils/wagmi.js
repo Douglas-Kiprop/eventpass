@@ -14,13 +14,23 @@ const eventRegistryAddress = '0xdCceD31e8746dF9064B8Cb17A52b15461fe2aCFB';
 const ticketNFTAddress = '0xe2Bf7529fBF6D7686029bC0E233A36d396f77a70';
 const usdcAddress = '0x036CbD53842c5426634e7929541eC2318f3dCF7e'; // Base Sepolia USDC
 
-// --- Get RPC URL from environment variable ---
-const baseSepoliaRpcUrl = process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL;
+// --- RPC URL Configuration ---
 
-if (!baseSepoliaRpcUrl) {
-  console.warn("Base Sepolia RPC URL (NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL) is not set in environment variables. Falling back to public RPC.");
+// This was your original RPC URL from environment variables.
+// It's not directly used for the Wagmi transport if Paymaster is active for baseSepolia,
+// but it's good to keep the environment variable for other potential uses or fallback.
+const originalBaseSepoliaRpcUrl = process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL;
+
+if (!originalBaseSepoliaRpcUrl) {
+  // This warning is still relevant if you expect this variable to be set for other purposes.
+  console.warn("Original Base Sepolia RPC URL (NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL) is not set in environment variables.");
 }
-// --- End RPC URL --- 
+
+// Your Coinbase Paymaster & Bundler Endpoint for Base Sepolia
+// CORRECTED: Removed extra backticks and spaces from the string.
+const coinbasePaymasterBundlerRpcUrl = 'https://api.developer.coinbase.com/rpc/v1/base-sepolia/0LyroFvbm5BAZqaPEZ5UDGaPp8tKeFP9';
+
+// --- End RPC URL Configuration ---
 
 // Wagmi Configuration
 export const config = createConfig({
@@ -28,15 +38,17 @@ export const config = createConfig({
   connectors: [
     coinbaseWallet({
       appName: 'EventPass',
-      preference: 'smartWalletOnly', // Optional: prioritize Smart Wallets
+      preference: 'all', // Allows users to choose Smart Wallet or EOA via Coinbase Wallet
     }),
-    injected(), // Add MetaMask connector
-    // walletConnect({ projectId: 'YOUR_WALLETCONNECT_PROJECT_ID' }), // Replace with your Project ID if needed
+    injected(), // For MetaMask and other browser EOA wallets (usually shown as "Browser Wallet")
+    // walletConnect({ projectId: 'YOUR_WALLETCONNECT_PROJECT_ID' }),
   ],
   transports: {
-    // --- Use environment variable for RPC --- 
-    [baseSepolia.id]: http(baseSepoliaRpcUrl || undefined),
-    // --- End RPC change --- 
+    // Use the Coinbase Paymaster & Bundler endpoint for Base Sepolia.
+    // Transactions from compatible Smart Wallets will be eligible for gas sponsorship.
+    // Transactions from EOA wallets (like MetaMask via "Browser Wallet") will go through this RPC,
+    // but users will pay their own gas.
+    [baseSepolia.id]: http(coinbasePaymasterBundlerRpcUrl),
   },
   ssr: true, // Enable SSR support if needed for Next.js
 });

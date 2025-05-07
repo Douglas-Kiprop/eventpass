@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@coinbase/coinbase-sdk": "^0.23.0",
-    "@coinbase/onchainkit": "^0.38.8",
+    "@coinbase/onchainkit": "^0.38.11",
     "@coinbase/wallet-sdk": "^4.3.2",
     "@tanstack/react-query": "^5.74.9",
     "alchemy-sdk": "^3.5.8",

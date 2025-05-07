@@ -50,9 +50,12 @@
 
 ### Core Functionality
 - [x] Build landing page in `/frontend/src/app/page.js`. // Updated path
-  - Display a welcome message and options for wallet creation and USDC purchase.
-  - Add a "Get Started" button to redirect to `/event/[eventId]` (e.g., `/event/1` for testing).
-  - Style with Tailwind CSS (mobile-first, responsive, dark theme inspired by 21st.dev).
+  - Displays events fetched from `EventRegistry.sol`.
+  - Shows "Create New Event" button for admin/owner.
+  - Handles loading and error states for event fetching.
+  - Styled with Tailwind CSS.
+  - ~~Display a welcome message and options for wallet creation and USDC purchase.~~ (Deferred/Replaced by current functionality)
+  - ~~Add a "Get Started" button to redirect to `/event/[eventId]` (e.g., `/event/1` for testing).~~ (Replaced by event cards linking to detail pages)
 - [ ] Integrate CDP Wallet API for new user wallet creation on the landing page.
   - Add a "Create Wallet" button in `/frontend/src/app/page.js` for users without wallets. // Updated path
   - Use Wallet API to generate a smart wallet for new users.
@@ -60,23 +63,28 @@
 - [ ] Integrate CDP Onramp for fiat-to-USDC purchases on the landing page.
   - Add an Onramp UI component to `/frontend/src/app/page.js`. // Updated path
   - Allow users to buy USDC with fiat before proceeding to the event page.
-- [ ] Implement wallet connection component in `/frontend/src/components/WalletConnect.js`.
+- [x] Implement wallet connection component in `/frontend/src/components/WalletConnect.js`.
   - Use OnchainKit to connect to Base Sepolia.
   - Display connected wallet address and disconnect option.
   - Make the component globally accessible via `/frontend/src/app/layout.js`. // Updated path for App Router global layout
-- [ ] Build event details page in `/frontend/src/app/event/[eventId]/page.js`. // Updated path
-  - Fetch event data (name, date, price, tickets available) via Backend API (mock if not available, e.g., `{ id: "1", name: "Boxing Match", date: "2025-05-01", price: "10", maxTickets: 100, ticketsSold: 50 }`).
-  - Display event details in a card with Tailwind CSS (mobile-first, responsive, dark theme inspired by 21st.dev).
-  - Add a "Buy Now" button that triggers USDC payment and automatic NFT minting.
-- [ ] Implement USDC payment and automatic NFT minting flow.
-  - Use wagmi to call `USDC.approve` for the ticket price.
-  - Call `PaymentHandler.purchaseTicket` to process payment and mint NFT in a single transaction.
-  - On success, automatically redirect to `/mint` page to view the minted NFT.
-  - Handle errors (e.g., insufficient USDC, sold-out event) with user-friendly messages in a modal.
+  - **Note**: We've been using wagmi's `useAccount` and OnchainKit's connect button, which covers this.
+- [x] Build event details page in `/frontend/src/app/event/[eventId]/page.js`. // Updated path
+  - Fetches event data (name, date, price, tickets available) from `EventRegistry.sol` using `getEventDetails`.
+  - Displays event details in a card with Tailwind CSS.
+  - Implemented "Buy Now" button that triggers USDC payment and automatic NFT minting.
+- [x] Implement USDC payment and automatic NFT minting flow on `/frontend/src/app/event/[eventId]/page.js`.
+  - Uses wagmi to call `USDC.approve` for the ticket price (to `PaymentHandler.sol`).
+  - Calls `PaymentHandler.purchaseTicket` (or equivalent) to process payment and mint NFT in a single transaction.
+  - On success, displays confirmation (e.g., redirect to `/mint` page or show inline message).
+  - Handles errors (e.g., insufficient USDC, sold-out event) with user-friendly messages.
 - [ ] Build minting confirmation page in `/frontend/src/app/mint/page.js`. // Updated path
   - Display the already-minted NFT’s metadata (event ID, name, date).
   - Add a "Share on Warpcast" button using MiniKit.
   - Style with Tailwind CSS (dark theme, 21st.dev-inspired design).
+- [x] Implement "Create New Event" page (`/frontend/src/app/create-event/page.js`) accessible by admin.
+  - Form for event details (name, price, max supply).
+  - Calls `createEvent` on `EventRegistry.sol`.
+  - Admin status verified by checking `owner()` of `EventRegistry.sol` against connected address.
 - [ ] Write Jest tests for frontend components.
   - Test `app/page.js` for rendering and navigation. // Updated path
   - Test `WalletConnect.js` for connection/disconnection.

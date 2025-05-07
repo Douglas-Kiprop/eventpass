@@ -1,20 +1,22 @@
 'use client'; // Mark as Client Component if we need hooks or interactivityy
 
-import { useParams } from 'next/navigation'; // Hook to access route parameters
+import { useParams, useRouter } from 'next/navigation'; // Hook to access route parameters
 import Link from 'next/link';
 import { useState, useEffect } from 'react'; // Added useState, useEffect
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract } from 'wagmi'; // Added wagmi hooks
 import { contracts, targetChain } from '@eventpass/utils/wagmi'; // Import contract details using alias
 import { parseUnits, formatUnits } from 'ethers'; // Import ethers utils
+import { decodeEventLog } from 'viem'; // Re-add this import
 
 export default function EventPage() {
   const params = useParams(); // Get route parameters'
+  const router = useRouter(); // Initialize useRouter
   const eventId = params.eventId ? BigInt(params.eventId) : null; // Extract and convert eventId to BigInt
 
   // Wagmi hooks
   const { address: connectedAddress, chain } = useAccount(); // Get connected account address and chain
   const { data: hash, error: writeError, isPending: isWritePending, writeContract } = useWriteContract(); // Hook for writing to contracts
-  const { isLoading: isConfirming, isSuccess: isConfirmed, error: receiptError } = useWaitForTransactionReceipt({ hash }); // Hook to wait for transaction confirmation
+  const { data: receipt, isLoading: isConfirming, isSuccess: isConfirmed, error: receiptError } = useWaitForTransactionReceipt({ hash }); // <-- MODIFIED: Destructure 'data' as 'receipt'
 
   // State for purchase flow
   const [purchaseStep, setPurchaseStep] = useState('idle'); // 'idle', 'fetchingPrice', 'approving', 'purchasing', 'success', 'error'
@@ -22,6 +24,7 @@ export default function EventPage() {
   const [error, setError] = useState(null); // Store general errors
   const [eventPriceUSDC, setEventPriceUSDC] = useState(null); // Store event price in USDC units
   const [eventPriceWei, setEventPriceWei] = useState(null); // Store event price in wei
+  const [mintedTokenId, setMintedTokenId] = useState(null); // New state for the minted token ID
 
   // Fetch event details using useReadContract
   const { data: eventData, isLoading: isEventLoading, error: eventError } = useReadContract({
@@ -72,75 +75,52 @@ export default function EventPage() {
     }
   }, [hash]);
 
-  // Reset state on successful confirmation
+  // Reset state on successful confirmation & extract tokenId
   useEffect(() => {
-    if (isConfirmed && purchaseStep === 'purchasing') { // Check if it was the purchase step
-        setPurchaseStep('success');
-        // Optionally reset hash after a delay or user action
-        // setTxHash(null);
-    }
-  }, [isConfirmed, purchaseStep]);
+    if (isConfirmed && purchaseStep === 'purchasing' && receipt) {
+      setPurchaseStep('success');
+      // Try to find the TicketPurchased event in the logs
+      const eventAbiItem = contracts.paymentHandler.abi.find(
+        (item) => item.type === 'event' && item.name === 'TicketPurchased'
+      );
 
+      if (eventAbiItem) {
+        for (const log of receipt.logs) {
+          // Ensure the log is from the PaymentHandler contract
+          if (log.address.toLowerCase() === contracts.paymentHandler.address.toLowerCase()) {
+            try {
+              const decodedLog = decodeEventLog({
+                abi: [eventAbiItem], // decodeEventLog expects an array of ABI items
+                data: log.data,
+                topics: log.topics,
+              });
 
-  // --- Purchase Logic ---
-  const handlePurchase = async () => {
-    if (!connectedAddress) {
-      setError("Please connect your wallet first.");
-      return;
-    }
-    if (chain?.id !== targetChain.id) {
-        setError(`Please switch to the ${targetChain.name} network.`);
-        return;
-    }
-    if (!eventId || eventPriceWei === null) {
-      setError("Event details not loaded or invalid.");
-      return;
-    }
-    if (!eventData || !eventData[4]) { // Check if event is active (index 4)
-        setError("This event is not currently active for ticket sales.");
-        return;
-    }
-     if (eventData[3] >= eventData[2]) { // Check if ticketsSold >= maxSupply
-        setError("This event is sold out.");
-        return;
-    }
-
-
-    setError(null); // Clear previous errors
-    setTxHash(null); // Clear previous hash
-    setPurchaseStep('approving'); // Start with approval step
-
-    try {
-      // 1. Approve USDC spending
-      console.log(`Approving ${eventPriceUSDC} USDC for PaymentHandler...`);
-      writeContract({
-        address: contracts.usdc.address,
-        abi: contracts.usdc.abi,
-        functionName: 'approve',
-        args: [contracts.paymentHandler.address, eventPriceWei],
-        chainId: targetChain.id,
-      }, {
-        onSuccess: (approvalHash) => {
-          console.log('Approval transaction sent:', approvalHash);
-          setTxHash(approvalHash); // Set hash for waiting receipt
-          // Now wait for this approval transaction to confirm
-          // The useWaitForTransactionReceipt hook handles this automatically
-          // We need a way to know when approval is confirmed to proceed to purchase.
-          // We'll use the isConfirmed flag combined with the current step.
-        },
-        onError: (err) => {
-          console.error("Approval failed:", err);
-          setError(`Approval failed: ${err.shortMessage || err.message}`);
-          setPurchaseStep('error');
+              if (decodedLog.eventName === 'TicketPurchased') {
+                // Ensure args exist and tokenId is present
+                if (decodedLog.args && typeof decodedLog.args.tokenId !== 'undefined') {
+                  const tokenIdFromEvent = decodedLog.args.tokenId;
+                  setMintedTokenId(tokenIdFromEvent.toString());
+                  console.log('Minted tokenId:', tokenIdFromEvent.toString());
+                } else {
+                  console.error('TicketPurchased event decoded, but tokenId not found in args:', decodedLog.args);
+                }
+                break; // Found the event, no need to check other logs
+              }
+            } catch (e) {
+              console.warn('Could not decode a log for TicketPurchased event:', e);
+            }
+          }
         }
-      });
-
-    } catch (err) {
-      console.error("Error during approval initiation:", err);
-      setError(`Initiation failed: ${err.message}`);
-      setPurchaseStep('error');
+        if (!mintedTokenId && purchaseStep === 'success') { // Check if mintedTokenId was set after loop
+            console.warn('Purchase successful, but could not extract minted tokenId from transaction logs.');
+        }
+      } else {
+        console.error('TicketPurchased event ABI not found in PaymentHandler ABI.');
+        // Potentially set an error state here if this is critical for UI
+      }
     }
-  };
+  }, [isConfirmed, purchaseStep, receipt, mintedTokenId]); // Added mintedTokenId to dependencies to avoid re-running if already set
+
 
   // Effect to trigger purchase after approval confirmation
   useEffect(() => {
@@ -172,6 +152,53 @@ export default function EventPage() {
       });
     }
   }, [isConfirmed, purchaseStep, txHash, eventId, connectedAddress, writeContract]); // Add dependencies
+
+  // Define the handlePurchase function
+  const handlePurchase = async () => {
+    if (!connectedAddress) {
+      setError('Please connect your wallet.');
+      setPurchaseStep('error');
+      return;
+    }
+    if (chain?.id !== targetChain.id) {
+      setError(`Please switch to ${targetChain.name} network.`);
+      setPurchaseStep('error');
+      return;
+    }
+    if (!eventPriceWei || eventPriceWei <= 0n) { // Use 0n for BigInt comparison
+      setError('Event price is not available or invalid.');
+      setPurchaseStep('error');
+      return;
+    }
+    if (!eventData || !eventData[4] || (eventData && eventData[3] >= eventData[2])) {
+      setError('Event is not available for purchase (inactive or sold out).');
+      setPurchaseStep('error');
+      return;
+    }
+
+    setError(null); // Clear previous errors
+    setPurchaseStep('approving'); // Set step to approving
+
+    console.log(`Attempting to approve ${formatUnits(eventPriceWei, 6)} USDC for spender: ${contracts.paymentHandler.address}`);
+
+    writeContract({
+      address: contracts.usdc.address,
+      abi: contracts.usdc.abi,
+      functionName: 'approve',
+      args: [contracts.paymentHandler.address, eventPriceWei],
+      chainId: targetChain.id,
+    }, {
+      onSuccess: (approvalHash) => {
+        console.log('Approval transaction sent:', approvalHash);
+        setTxHash(approvalHash); // Set hash for waiting receipt
+      },
+      onError: (err) => {
+        console.error("Approval failed:", err);
+        setError(`Approval failed: ${err.shortMessage || err.message}`);
+        setPurchaseStep('error');
+      }
+    });
+  };
 
 
   // --- Render Logic ---
@@ -283,11 +310,25 @@ export default function EventPage() {
                    </a>
                  </p>
               )}
-              <Link href="/my-tickets">
-                <button className="px-5 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition-colors duration-200">
-                  View My Tickets
-                </button>
-              </Link>
+              {/* Updated Link to go to the /mint page */}
+              {mintedTokenId && eventId && eventData && typeof eventData[5] !== 'undefined' ? (
+                <Link 
+                  href={`/mint?eventId=${eventId.toString()}&tokenId=${mintedTokenId}&eventName=${encodeURIComponent(eventData[5])}`}
+                  className="px-5 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition-colors duration-200"
+                >
+                  View Your NFT Ticket
+                </Link>
+              ) : (
+                // Fallback if tokenId or eventName isn't available yet, or if there was an issue
+                <div className="text-center">
+                    <p className="text-yellow-400 mb-2">
+                        Successfully purchased! {mintedTokenId ? 'Preparing your ticket link...' : 'Token ID retrieval pending or failed.'}
+                    </p>
+                    <Link href="/my-tickets" className="px-5 py-2 rounded-md bg-gray-600 hover:bg-gray-500 text-white font-medium transition-colors duration-200">
+                        View All My Tickets (Fallback)
+                    </Link>
+                </div>
+              )}
             </div>
           )}
           {/* --- END SUCCESS MESSAGE --- */} 

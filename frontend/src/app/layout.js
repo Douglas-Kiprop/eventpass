@@ -1,24 +1,30 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Providers } from "./providers"; // Import the Providers component
-import Header from "../components/Header"; // Import the Header component
+import { Providers } from "./providers"; 
+import Header from "../components/Header"; 
+
+// Remove OnchainKit styles import
+// import '@coinbase/onchainkit/styles.css';
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "EventPass",
-  description: "Your gateway to exclusive events",
+  title: "EventPass DApp",
+  description: "Discover and purchase tickets for upcoming events.",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-gray-900`}> {/* Added default dark background */}
-        <Providers> {/* Wrap the children with Providers */}
-          <Header /> {/* Add the Header here */}
-          <main className="pt-4"> {/* Add some padding below header */}
-             {children}
+      <body className={`${inter.className} bg-gray-900 text-gray-100`}>
+        <Providers>
+          <Header />
+          <main className="pt-5 pb-12 min-h-[calc(100vh-160px)]"> {/* Adjusted padding */}
+            {children}
           </main>
+          <footer className="bg-gray-800 text-center p-4 text-sm text-gray-400">
+            © {new Date().getFullYear()} EventPass. All rights reserved.
+          </footer>
         </Providers>
       </body>
     </html>
