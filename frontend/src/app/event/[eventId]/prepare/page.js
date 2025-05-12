@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAccount, useReadContract } from 'wagmi';
-import { OnRampButton } from '@coinbase/onchainkit/pay';
-import '@coinbase/onchainkit/styles.css'; // Import styles for OnchainKit components
+// import { OnRampButton } from '@coinbase/onchainkit/pay'; // Comment out or remove this line
+// import { FundButton } from '@coinbase/onchainkit/fund'; // Remove this line
+// import '@coinbase/onchainkit/styles.css'; // Ensure this is removed or remains commented out
 import { contracts, targetChain } from '@/utils/wagmi'; // Assuming your wagmi config is in utils
 
 // Your Coinbase Project ID
@@ -93,37 +94,25 @@ export default function PrepareEventPage() {
           <p className="text-gray-300 mb-4">
             Need funds for this event? You can easily add USDC to your wallet on Base Sepolia.
           </p>
+          {/* 
+          The FundButton component usage was here. It has been removed.
+          You can add your alternative funding option UI/logic in this section.
+          For example, a simple link to a faucet or an exchange:
+          
           {showOnramp && address && (
-            <OnRampButton
-              appId={COINBASE_PROJECT_ID}
-              destinationWallets={[
-                {
-                  address: address,
-                  blockchains: ['base-sepolia'],
-                  assets: ['USDC'],
-                },
-              ]}
-              onSuccess={() => {
-                console.log('Onramp successful!');
-                // You could add a toast notification here
-              }}
-              onExit={() => {
-                console.log('Onramp exited.');
-              }}
-              onError={(error) => {
-                console.error('Onramp error:', error);
-                // You could add a toast notification for error
-              }}
-              widgetParameters={{
-                theme: 'dark', // Or 'light'
-                defaultNetwork: 'base-sepolia',
-                defaultAsset: 'USDC',
-                // You can prefill an amount if desired, e.g., prefillAmount: '20'
-              }}
-            >
-              Add Funds (Buy USDC)
-            </OnRampButton>
+            <div>
+              <p className="mb-2">To get USDC on Base Sepolia, you can use a faucet:</p>
+              <a 
+                href="https://your-preferred-base-sepolia-faucet-link.com"
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-indigo-400 hover:text-indigo-300 underline"
+              >
+                Get Base Sepolia Testnet USDC
+              </a>
+            </div>
           )}
+          */}
         </div>
 
         <div className="text-center">

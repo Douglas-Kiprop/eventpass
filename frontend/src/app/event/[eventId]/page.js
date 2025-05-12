@@ -57,12 +57,40 @@ export default function EventPage() {
   // Update local error state based on wagmi hook errors
   useEffect(() => {
     if (writeError) {
-      setError(`Transaction Error: ${writeError.shortMessage || writeError.message}`);
+      console.error('Full writeError object:', writeError); // Log the full writeError
+      let detailedWriteError = writeError.shortMessage || writeError.message;
+      if (writeError.cause && typeof writeError.cause.shortMessage === 'string') {
+        detailedWriteError = writeError.cause.shortMessage;
+      } else if (writeError.cause && typeof writeError.cause.message === 'string') {
+        detailedWriteError = writeError.cause.message;
+      }
+      setError(`Transaction Error: ${detailedWriteError}`);
       setPurchaseStep('error');
       setTxHash(null); // Clear hash on error
     }
     if (receiptError) {
-      setError(`Receipt Error: ${receiptError.shortMessage || receiptError.message}`);
+      console.error('Full receiptError object:', receiptError); // Log the full receiptError
+      // Attempt to get a more specific message from receiptError
+      let detailedReceiptError = receiptError.shortMessage || receiptError.message;
+      
+      // Let's try to access nested properties more safely and log them
+      if (receiptError.cause) {
+        console.log('receiptError.cause:', receiptError.cause);
+        if (typeof receiptError.cause.shortMessage === 'string' && receiptError.cause.shortMessage) {
+          detailedReceiptError = receiptError.cause.shortMessage;
+        } else if (typeof receiptError.cause.message === 'string' && receiptError.cause.message) {
+          detailedReceiptError = receiptError.cause.message;
+        } else if (receiptError.cause.data && receiptError.cause.data.message) {
+          // Sometimes the revert reason is nested deeper, especially with custom errors
+          console.log('receiptError.cause.data.message:', receiptError.cause.data.message);
+          detailedReceiptError = receiptError.cause.data.message;
+        } else if (typeof receiptError.cause === 'string') {
+          // If cause itself is a string
+          detailedReceiptError = receiptError.cause;
+        }
+      }
+
+      setError(`Receipt Error: ${detailedReceiptError}`);
       setPurchaseStep('error');
       setTxHash(null); // Clear hash on error
     }

@@ -4,7 +4,7 @@ import { Providers } from "./providers";
 import Header from "../components/Header"; 
 
 // Remove OnchainKit styles import
-// import '@coinbase/onchainkit/styles.css';
+// import '@coinbase/onchainkit/styles.css'; // Remove this line
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,11 +22,11 @@ export default function RootLayout({ children }) {
           <main className="pt-5 pb-12 min-h-[calc(100vh-160px)]"> {/* Adjusted padding */}
             {children}
           </main>
-          <footer className="bg-gray-800 text-center p-4 text-sm text-gray-400">
-            © {new Date().getFullYear()} EventPass. All rights reserved.
-          </footer>
+          {/* The footer block that was here is now correctly removed */}
         </Providers>
       </body>
     </html>
   );
 }
+
+/* Ensure any stray footer code below this line is also deleted */

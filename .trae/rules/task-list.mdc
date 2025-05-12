@@ -133,3 +133,22 @@
 
 ### Documentation Tasks
 - [ ] To be defined: Write README, document contract/frontend/backend details, prepare hackathon deliverables.
+
+
+move on to adding search/filter capabilities, fetching real event data, or building out the individual event pages!
+
+- Refine any of the existing sections (e.g., add actual icons, improve content).
+- Start working on the mobile responsiveness of the Navbar.
+- Discuss the actual implementation of the animate-aurora CSS animation.
+- Move on to creating other pages (like /explore-events or /create-event ).
+
+- Flesh out the /explore-events page:
+- Add Search and Filter Capabilities: Implement a search bar and filters (e.g., by date, category, price) to allow users to narrow down the event listings. This would involve adding UI elements and state management for the filters.
+- Fetch Real Event Data: Replace the sampleEvents array with logic to fetch event data from your EventRegistry.sol smart contract. This would involve using wagmi hooks to interact with the contract.
+- Build Individual Event Pages: The EventCard on the /explore-events page links to /explore-events/{event.id} . We can create the dynamic route and page component for displaying detailed information about a single event. This is similar to the existing /event/[eventId]/page.js but could be tailored for the "explore" flow if needed, or we could consolidate.
+- Refine Existing Landing Page Sections:
+- Add Actual Icons: Replace placeholder text/emojis (like in the CredibilitySection or Footer ) with SVG icons from a library like lucide-react .
+- Improve Content: Review and enhance the text content in any section for clarity, engagement, or accuracy.
+- Navbar Mobile Responsiveness: Make the Navbar component responsive for smaller screens, likely involving a hamburger menu and a slide-out or dropdown navigation panel.
+- animate-aurora CSS Animation: Implement the actual CSS keyframes and styles for the animate-aurora class used in the HeroSection to create the desired background effect.
+- Work on other pages from your task list: Such as the /create-event page (though a version of this already exists) or the /mint confirmation page.

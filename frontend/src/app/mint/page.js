@@ -5,8 +5,8 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useReadContract } from 'wagmi';
 // import { ShareButton } from '@coinbase/onchainkit/minikit'; // This was the incorrect import
-import { useOpenUrl } from '@coinbase/onchainkit/minikit'; // Import useOpenUrl
-import '@coinbase/onchainkit/styles.css'; // General OnchainKit styles
+// import { useOpenUrl } from '@coinbase/onchainkit/minikit'; // Remove this line
+// import '@coinbase/onchainkit/styles.css'; // Remove this line
 import { contracts, targetChain } from '@/utils/wagmi';
 import { formatUnits } from 'viem';
 
@@ -20,7 +20,7 @@ function MintConfirmationContent() {
   const eventId = eventIdStr ? BigInt(eventIdStr) : undefined;
   const tokenId = tokenIdStr ? BigInt(tokenIdStr) : undefined;
 
-  const openUrl = useOpenUrl(); // Initialize the useOpenUrl hook
+  // const openUrl = useOpenUrl(); // REMOVE THIS LINE: Initialize the useOpenUrl hook
 
   // Fetch event details to get the date
   const { data: eventDetails, isLoading: isLoadingEventDetails, error: errorEventDetails } = useReadContract({
@@ -65,11 +65,23 @@ function MintConfirmationContent() {
     embeds: [eventPageUrl], // URL to embed in the Warpcast post
   };
 
+  // REMOVE OR REFACTOR THIS FUNCTION
+  // const handleShareToWarpcast = () => {
+  //   const text = encodeURIComponent(shareContent.text);
+  //   const embedUrl = encodeURIComponent(shareContent.embeds[0]);
+  //   const warpcastUrl = `https://warpcast.com/~/compose?text=${text}&embeds[]=${embedUrl}`;
+  //   openUrl(warpcastUrl); // This line causes the error if openUrl is not defined
+  // };
+
+  // Alternative for handleShareToWarpcast if you want to keep the button:
   const handleShareToWarpcast = () => {
     const text = encodeURIComponent(shareContent.text);
     const embedUrl = encodeURIComponent(shareContent.embeds[0]);
     const warpcastUrl = `https://warpcast.com/~/compose?text=${text}&embeds[]=${embedUrl}`;
-    openUrl(warpcastUrl);
+    // Replace openUrl with standard window.open
+    if (typeof window !== "undefined") {
+      window.open(warpcastUrl, '_blank', 'noopener,noreferrer');
+    }
   };
 
   return (
@@ -95,7 +107,7 @@ function MintConfirmationContent() {
       <div className="mb-8 text-center">
         <p className="text-gray-300 mb-3">Share your new ticket with your frens!</p>
         <button
-          onClick={handleShareToWarpcast}
+          onClick={handleShareToWarpcast} // This button will now use the refactored function
           className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition duration-150 ease-in-out"
         >
           Share on Warpcast
