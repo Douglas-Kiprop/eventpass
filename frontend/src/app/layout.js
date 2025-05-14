@@ -9,7 +9,7 @@ import Header from "../components/Header";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "EventPass DApp",
+  title: "EventPass ",
   description: "Discover and purchase tickets for upcoming events.",
 };
 

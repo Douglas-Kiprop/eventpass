@@ -2,9 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Twitter, Send, MessageSquare, ShieldCheck, Network, Users, Rocket } from 'lucide-react'; // Updated imports
-// We can add icon imports here later, e.g., from 'lucide-react'
-// For example: import { Zap } from 'lucide-react'; // Zap was suggested before, but ShieldCheck is used for security now
+import { Twitter, Send, MessageSquare, ShieldCheck, Network, Users, Rocket } from 'lucide-react';
+import AnimatedSection from '../components/AnimatedSection'; // Assuming you created it in src/components
 
 const Navbar = () => {
   return (
@@ -20,9 +19,11 @@ const Navbar = () => {
           <Link href="#testimonials" className="text-gray-400 hover:text-white transition-colors duration-300">Testimonials</Link>
           <Link href="#faq" className="text-gray-400 hover:text-white transition-colors duration-300">FAQs</Link>
         </div>
-        <button className="px-6 py-2.5 bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
-          Explore Events
-        </button>
+        <Link href="/explore-events"> {/* Added Link wrapper */}
+          <button className="px-6 py-2.5 bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+            Explore Events
+          </button>
+        </Link>
         {/* Add mobile menu button here later */}
       </div>
     </nav>
@@ -32,15 +33,15 @@ const Navbar = () => {
 const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center text-white bg-black overflow-hidden pt-20">
-      {/* Subtle animated gradient mesh background */}
       <div className="absolute inset-0 -z-20">
-        <div className="absolute inset-0 bg-black"></div>
+        <div className="absolute inset-0 bg-black"></div> {/* This ensures a black base if opacity is less than 1 or gradients don't cover fully */} 
         <div
-          className="absolute inset-0 opacity-30 animate-aurora"
+          className="absolute inset-0 opacity-30 animate-aurora" // Class is applied
           style={{
             backgroundImage: `radial-gradient(ellipse at 20% 30%, #581c87 0%, transparent 50%),
                              radial-gradient(ellipse at 80% 70%, #86198f 0%, transparent 50%),
                              radial-gradient(ellipse at 50% 50%, #1e1b4b 0%, transparent 60%)`,
+            // backgroundSize: '300% 300%', // Let the animation handle this now
           }}
         ></div>
       </div>
@@ -57,9 +58,11 @@ const HeroSection = () => {
           Experience the future of event access with EventPass. Secure, transparent, and truly ownable NFT tickets for unforgettable live experiences.
         </p>
         <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
-          <button className="px-10 py-4 bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 text-white font-bold rounded-xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 text-lg">
-            Discover Upcoming Events
-          </button>
+          <Link href="/explore-events"> {/* Added Link wrapper */}
+            <button className="px-10 py-4 bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 text-white font-bold rounded-xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 text-lg">
+              Discover Upcoming Events
+            </button>
+          </Link>
         </div>
       </div>
     </section>
@@ -75,7 +78,7 @@ const CredibilitySection = () => {
   ];
 
   return (
-    <section id="credibility" className="py-16 md:py-24 bg-black">
+    <AnimatedSection id="credibility" className="py-16 md:py-24 bg-black">
       <div className="container mx-auto px-6 text-center">
         <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-10">
           Powered by Leading Web3 Technology
@@ -95,7 +98,7 @@ const CredibilitySection = () => {
           ))}
         </div>
       </div>
-    </section>
+    </AnimatedSection>
   );
 };
 
@@ -108,7 +111,7 @@ const FeaturesSection = () => {
   ];
 
   return (
-    <section id="features" className="py-16 md:py-24 bg-black text-white">
+    <AnimatedSection id="features" className="py-16 md:py-24 bg-black text-white">
       <div className="container mx-auto px-6">
         <h2 className="text-4xl md:text-5xl font-bold text-center mb-6 tracking-tight">
           Experience Events, <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">Reimagined</span>.
@@ -124,7 +127,7 @@ const FeaturesSection = () => {
                 <h3 className="text-2xl font-semibold mb-2 text-white">{event.name}</h3>
                 <p className="text-sm text-purple-400 font-medium mb-3">{event.date}</p>
                 <p className="text-gray-400 text-sm mb-6 flex-grow">{event.description}</p>
-                <Link href={`/event/${event.id}/prepare`} /* Adjust link as needed */ className="mt-auto inline-block text-center w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-lg shadow-md hover:from-purple-700 hover:to-indigo-700 transition-all duration-300">
+                <Link href={`/event/${event.id}/prepare`} className="mt-auto inline-block text-center w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-lg shadow-md hover:from-purple-700 hover:to-indigo-700 transition-all duration-300">
                   View Details
                 </Link>
               </div>
@@ -132,7 +135,7 @@ const FeaturesSection = () => {
           ))}
         </div>
       </div>
-    </section>
+    </AnimatedSection>
   );
 };
 
@@ -161,7 +164,7 @@ const WhyChooseUsSection = () => {
   ];
 
   return (
-    <section id="why-eventpass" className="py-16 md:py-24 bg-black text-white">
+    <AnimatedSection id="why-eventpass" className="py-16 md:py-24 bg-black text-white">
       <div className="container mx-auto px-6">
         <h2 className="text-4xl md:text-5xl font-bold text-center mb-6 tracking-tight">
           Why <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-red-500">EventPass</span>?
@@ -186,7 +189,7 @@ const WhyChooseUsSection = () => {
           ))}
         </div>
       </div>
-    </section>
+    </AnimatedSection> // Corrected closing tag here
   );
 };
 
@@ -321,10 +324,9 @@ const FAQSection = () => {
 
 const CTASection = () => {
   return (
-    <section 
+    <AnimatedSection 
       id="cta" 
       className="py-16 md:py-24 bg-gray-900 text-white border-t border-b border-gray-800"
-      // Alternative subtle gradient: className="py-16 md:py-24 bg-gradient-to-b from-gray-900 to-black text-white border-t border-b border-gray-800"
     >
       <div className="container mx-auto px-6 text-center">
         <h2 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight">
@@ -348,7 +350,7 @@ const CTASection = () => {
           </Link>
         </div>
       </div>
-    </section>
+    </AnimatedSection> // Corrected closing tag here
   );
 };
 
@@ -413,15 +415,17 @@ const Footer = () => {
 
 export default function LandingPage() {
   return (
-    <div className="bg-black text-white min-h-screen antialiased">
+    <div className="bg-black min-h-screen flex flex-col">
       <Navbar />
-      <HeroSection />
-      <CredibilitySection />
-      <FeaturesSection />
-      <WhyChooseUsSection />
-      <ReviewSection />
-      <FAQSection />
-      <CTASection />
+      <main className="flex-grow">
+        <HeroSection />
+        <CredibilitySection />
+        <FeaturesSection />
+        <WhyChooseUsSection />
+        <ReviewSection />
+        <FAQSection />
+        <CTASection />
+      </main>
       <Footer />
     </div>
   );

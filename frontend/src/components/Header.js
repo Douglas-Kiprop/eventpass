@@ -25,7 +25,7 @@ export default function Header() {
   }, [isConnected, address, connector]);
 
   return (
-    <header className="bg-gray-800 text-white shadow-md">
+    <header className="bg-black text-white shadow-md"> {/* Changed bg-gray-800 to bg-black */}
       <nav className="container mx-auto px-4 py-3 flex justify-between items-center">
         <div className="flex items-center space-x-6">
           <Link href="/" className="text-xl font-bold hover:text-gray-300">
