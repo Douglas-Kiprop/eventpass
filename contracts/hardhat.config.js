@@ -13,7 +13,7 @@ module.exports = {
     hardhat: {
       // Configuration for the local Hardhat Network (optional)
     },
-    base_sepolia: {
+    baseSepolia: { // Changed from base_sepolia
       url: baseSepoliaRpcUrl,
       accounts: deployerPrivateKey ? [deployerPrivateKey] : [],
       chainId: 84532, // Base Sepolia Chain ID

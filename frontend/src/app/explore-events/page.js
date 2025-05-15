@@ -6,40 +6,40 @@ import Link from 'next/link';
 // Placeholder data for events - we'll fetch this dynamically later
 const sampleEvents = [
   {
-    id: '1',
-    name: 'Future Sounds Fest',
-    date: 'AUG 20-22, 2024',
+    id: '4',
+    name: 'Future Sounds Fest 2025',
+    date: 'AUG 20-22, 2025',
     location: 'Metaverse Arena',
-    description: 'Experience the next wave of electronic music with top DJs and immersive visuals.',
-    image: '/event-placeholder.png', // Replace with actual image path
-    price: '0.05 ETH'
+    description: 'Experience the next wave of electronic music with top DJs and immersive visuals in the new year.',
+    image: '/images/future-sounds-fest.jpg',
+    price: '5 USDC'
   },
   {
-    id: '2',
-    name: 'Web3 Innovators Summit',
-    date: 'SEP 15, 2024',
+    id: '5',
+    name: 'Web3 Innovators Summit 2025',
+    date: 'SEP 15, 2025',
     location: 'Decentraland Conference Hall',
-    description: 'Connect with leaders shaping the decentralized future. Keynotes, workshops, and networking.',
-    image: '/event-placeholder.png', // Replace with actual image path
+    description: 'Connect with leaders shaping the decentralized future. Keynotes, workshops, and networking for 2025.',
+    image: '/images/web3-innovators-summit.jpg',
     price: 'FREE'
   },
   {
-    id: '3',
-    name: 'Digital Art Showcase',
-    date: 'OCT 05-07, 2024',
+    id: '6',
+    name: 'Digital Art Showcase 2025',
+    date: 'OCT 05-07, 2025',
     location: 'Crypto Art Gallery (Online)',
-    description: 'Immerse yourself in groundbreaking NFT art from renowned and upcoming digital artists.',
-    image: '/event-placeholder.png', // Replace with actual image path
-    price: 'Varies'
+    description: 'Immerse yourself in groundbreaking NFT art from renowned and upcoming digital artists for 2025.',
+    image: '/images/digital-art-showcase.jpg',
+    price: '2 USDC'
   },
   {
-    id: '4',
-    name: 'Indie Game Developers Meetup',
-    date: 'NOV 10, 2024',
+    id: '7',
+    name: 'Indie Game Dev Meetup 2025',
+    date: 'NOV 10, 2025',
     location: 'The Sandbox Hub',
-    description: 'Showcase your game, get feedback, and network with fellow indie developers in the web3 space.',
-    image: '/event-placeholder.png', // Replace with actual image path
-    price: '0.01 ETH'
+    description: 'Showcase your game, get feedback, and network with fellow indie developers in the web3 space for 2025.',
+    image: '/images/IndieGameDevMeetup.jpg', // Using an existing image as placeholder
+    price: '1 USDC'
   }
 ];
 
@@ -55,7 +55,7 @@ const EventCard = ({ event }) => {
         <div className="flex justify-between items-center mt-auto">
           <p className="text-xl font-bold text-white">{event.price}</p>
           <Link 
-            href={`/explore-events/${event.id}`} // Link to individual event page (to be created)
+            href={`/event/${event.id}/prepare`} // CORRECT: Links to app/event/[eventId]/prepare/page.js
             className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-lg shadow-md hover:from-purple-700 hover:to-indigo-700 transition-all duration-300"
           >
             View Event

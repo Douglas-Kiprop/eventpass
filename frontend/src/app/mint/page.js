@@ -20,9 +20,7 @@ function MintConfirmationContent() {
   const eventId = eventIdStr ? BigInt(eventIdStr) : undefined;
   const tokenId = tokenIdStr ? BigInt(tokenIdStr) : undefined;
 
-  // const openUrl = useOpenUrl(); // REMOVE THIS LINE: Initialize the useOpenUrl hook
-
-  // Fetch event details to get the date
+  // Fetch event details to get the date - This can be removed if date is not used anywhere else
   const { data: eventDetails, isLoading: isLoadingEventDetails, error: errorEventDetails } = useReadContract({
     address: contracts.eventRegistry.address,
     abi: contracts.eventRegistry.abi,
@@ -34,8 +32,7 @@ function MintConfirmationContent() {
     },
   });
 
-  const eventDateTimestamp = eventDetails?.[1]; // Assuming date is the second element in the tuple
-  const eventDate = eventDateTimestamp ? new Date(Number(eventDateTimestamp) * 1000).toLocaleDateString() : 'Date TBD';
+  // Removed eventDateTimestamp and eventDateDisplay logic
 
   if (eventId === undefined || tokenId === undefined) {
     return (
@@ -99,9 +96,7 @@ function MintConfirmationContent() {
         <p className="text-lg text-gray-200 mb-2">
           <span className="font-medium text-gray-400">Ticket ID:</span> {tokenIdStr}
         </p>
-        <p className="text-lg text-gray-200">
-          <span className="font-medium text-gray-400">Event Date:</span> {eventDate}
-        </p>
+        {/* Event Date display removed */}
       </div>
 
       <div className="mb-8 text-center">
@@ -139,7 +134,7 @@ function MintConfirmationContent() {
 
 export default function MintPage() {
   return (
-    <div className="container mx-auto px-4 py-12 bg-gray-900 min-h-screen text-gray-100">
+    <div className="container mx-auto px-4 py-12 bg-[#0A0A0A] min-h-screen text-gray-100">
       {/* Suspense is important for pages that use useSearchParams */}
       <Suspense fallback={<div className="text-center text-xl p-8">Loading confirmation...</div>}>
         <MintConfirmationContent />

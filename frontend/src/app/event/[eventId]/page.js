@@ -247,7 +247,7 @@ export default function EventPage() {
 
   if (!eventId && !isEventLoading) {
     return (
-       <main className="flex min-h-screen flex-col items-center p-8 bg-gray-900 text-white">
+       <main className="flex min-h-screen flex-col items-center p-8 bg-[#0A0A0A] text-white">
          <div className="w-full max-w-3xl bg-gray-800 rounded-lg shadow-lg p-8 text-center">
             <Link href="/" className="text-blue-400 hover:text-blue-300 mb-6 inline-block">&larr; Back to Home</Link>
             <p className="text-red-500">Invalid Event ID.</p>
@@ -259,7 +259,7 @@ export default function EventPage() {
   // Display loading state for event details
   if (isEventLoading) {
      return (
-       <main className="flex min-h-screen flex-col items-center p-8 bg-gray-900 text-white">
+       <main className="flex min-h-screen flex-col items-center p-8 bg-[#0A0A0A] text-white">
          <div className="w-full max-w-3xl bg-gray-800 rounded-lg shadow-lg p-8 text-center">
             <Link href="/" className="text-blue-400 hover:text-blue-300 mb-6 inline-block">&larr; Back to Home</Link>
             <p>Loading event details...</p>
@@ -271,7 +271,7 @@ export default function EventPage() {
   // Display error if event details failed to load
   if (eventError && !eventData) {
      return (
-       <main className="flex min-h-screen flex-col items-center p-8 bg-gray-900 text-white">
+       <main className="flex min-h-screen flex-col items-center p-8 bg-[#0A0A0A] text-white">
          <div className="w-full max-w-3xl bg-gray-800 rounded-lg shadow-lg p-8 text-center">
             <Link href="/" className="text-blue-400 hover:text-blue-300 mb-6 inline-block">&larr; Back to Home</Link>
             <h1 className="text-3xl font-bold mb-4">Error</h1>
@@ -284,12 +284,14 @@ export default function EventPage() {
 
   // Main event display
   return (
-    <main className="flex min-h-screen flex-col items-center p-8 bg-gray-900 text-white">
+    <main className="flex min-h-screen flex-col items-center p-8 bg-[#0A0A0A] text-white">
       <div className="w-full max-w-3xl bg-gray-800 rounded-lg shadow-lg p-8">
-        <Link href="/" className="text-blue-400 hover:text-blue-300 mb-6 inline-block">&larr; Back to Home</Link>
+        {/* Keep original link or update as per overall navigation strategy */}
+        <Link href="/explore-events" className="text-blue-400 hover:text-blue-300 mb-6 inline-block">&larr; Back to All Events</Link>
 
-        {/* Display Event Details - Adapt based on your actual eventData structure */}
+        {/* Reverted: Accessing eventData assuming index 5 is the name */}
         <h1 className="text-4xl font-bold mb-4">{(eventData && eventData[5]) ? eventData[5] : `Event #${eventId.toString()}`}</h1>
+        {/* Reverted: Accessing eventData assuming index 0 is the organizer */}
         <p className="text-lg text-gray-300 mb-2">Organized by: <span className="text-sm font-mono">{(eventData && eventData[0]) ? eventData[0] : 'Loading...'}</span></p>
         <p className="text-xl font-semibold text-green-400 mb-4">Price: {eventPriceUSDC !== null ? `${eventPriceUSDC} USDC` : 'Loading...'}</p>
         <p className="text-gray-400 mb-1">Tickets Sold: {(eventData && typeof eventData[3] !== 'undefined') ? eventData[3].toString() : '...'}</p>

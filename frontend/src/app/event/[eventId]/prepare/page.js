@@ -72,50 +72,58 @@ export default function PrepareEventPage() {
     return (
       <div className="container mx-auto px-4 py-8 text-center">
         <p className="text-xl text-red-400">Event not found.</p>
+        {/* Keep original link or update as per overall navigation strategy */}
         <Link href="/" className="text-blue-400 hover:text-blue-300 mt-4 inline-block">Go to Homepage</Link>
       </div>
     );
   }
 
-  const { name: eventName, date: eventDateTimestamp } = eventDetails;
-  const eventDate = eventDateTimestamp ? new Date(Number(eventDateTimestamp) * 1000).toLocaleDateString() : 'Date TBD';
+  // Correctly access event name from the array structure returned by getEventDetails
+  // eventDetails structure: [organizer, price, maxSupply, ticketsSold, isActive, name_]
+  const eventName = eventDetails && eventDetails[5] ? eventDetails[5] : 'Event'; 
+  // Date is not available from getEventDetails, and we are removing it from display
+  // const eventDate = 'Date TBD'; // Removed
 
 
   return (
-    <div className="container mx-auto px-4 py-12 bg-gray-900 min-h-screen text-gray-100">
+    <div className="container mx-auto px-4 py-12 bg-[#0A0A0A] min-h-screen text-gray-100">
       <div className="max-w-2xl mx-auto bg-gray-800 shadow-xl rounded-lg p-8">
         <h1 className="text-3xl font-bold mb-2 text-center text-indigo-400">Prepare for Event</h1>
         <div className="mb-6 p-6 bg-gray-700 rounded-md">
-          <h2 className="text-2xl font-semibold mb-3">{eventName || 'Event'}</h2>
-          <p className="text-lg text-gray-300">Date: {eventDate}</p>
+          <h2 className="text-2xl font-semibold mb-3 text-center">{eventName}</h2>
         </div>
 
-        <div className="mb-8 text-center">
-          <p className="text-gray-300 mb-4">
-            Need funds for this event? You can easily add USDC to your wallet on Base Sepolia.
+        <div className="mb-8 p-6 bg-gray-700/50 rounded-lg">
+          <h3 className="text-xl font-semibold text-center mb-4 text-indigo-300">Testnet Funds</h3>
+          <p className="text-gray-300 mb-4 text-center text-sm">
+            You'll need Base Sepolia USDC and Sepolia ETH (for gas) to proceed.
           </p>
-          {/* 
-          The FundButton component usage was here. It has been removed.
-          You can add your alternative funding option UI/logic in this section.
-          For example, a simple link to a faucet or an exchange:
-          
-          {showOnramp && address && (
-            <div>
-              <p className="mb-2">To get USDC on Base Sepolia, you can use a faucet:</p>
-              <a 
-                href="https://your-preferred-base-sepolia-faucet-link.com"
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="text-indigo-400 hover:text-indigo-300 underline"
-              >
-                Get Base Sepolia Testnet USDC
-              </a>
-            </div>
-          )}
-          */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <a 
+              href="https://faucet.circle.com/"
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="block w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md text-center transition duration-150 ease-in-out"
+            >
+              Get USDC (Base Sepolia)
+            </a>
+            <a 
+              href="https://cloud.google.com/application/web3/faucet/ethereum/sepolia"
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="block w-full bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded-md text-center transition duration-150 ease-in-out"
+            >
+              Get ETH (Sepolia)
+            </a>
+          </div>
+          <div className="mt-6 p-3 bg-gray-600/70 rounded-md text-center">
+            <p className="text-sm text-yellow-300">
+              ✨ <span className="font-semibold">Pro Tip:</span> Use a Coinbase Smart Wallet for sponsored transaction fees!
+            </p>
+          </div>
         </div>
 
-        <div className="text-center">
+        <div className="text-center mt-10">
           <Link
             href={`/event/${eventId}`}
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
@@ -124,7 +132,8 @@ export default function PrepareEventPage() {
           </Link>
         </div>
          <div className="mt-8 text-center">
-            <Link href="/" className="text-indigo-400 hover:text-indigo-300 transition duration-150 ease-in-out">
+            {/* Updated Link to go to /explore-events */}
+            <Link href="/explore-events" className="text-indigo-400 hover:text-indigo-300 transition duration-150 ease-in-out">
               &larr; Back to All Events
             </Link>
           </div>

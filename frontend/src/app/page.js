@@ -105,9 +105,9 @@ const CredibilitySection = () => {
 const FeaturesSection = () => {
   // Placeholder data for event cards
   const featuredEvents = [
-    { id: 1, name: 'Future Sounds Fest', date: 'AUG 20-22', description: 'Experience the next wave of electronic music.', image: '/event-placeholder.png' },
-    { id: 2, name: 'Web3 Innovators Summit', date: 'SEP 15', description: 'Connect with leaders shaping the decentralized future.', image: '/event-placeholder.png' },
-    { id: 3, name: 'Digital Art Showcase', date: 'OCT 05-07', description: 'Immerse yourself in groundbreaking NFT art.', image: '/event-placeholder.png' },
+    { id: 4, name: 'Future Sounds Fest', date: 'AUG 20-22', description: 'Experience the next wave of electronic music.', image: '/images/future-sounds-fest.jpg' }, // Updated image path
+    { id: 5, name: 'Web3 Innovators Summit', date: 'SEP 15', description: 'Connect with leaders shaping the decentralized future.', image: '/images/web3-innovators-summit.jpg' }, // Updated image path
+    { id: 6, name: 'Digital Art Showcase', date: 'OCT 05-07', description: 'Immerse yourself in groundbreaking NFT art.', image: '/images/digital-art-showcase.jpg' }, // Updated image path
   ];
 
   return (
@@ -326,7 +326,7 @@ const CTASection = () => {
   return (
     <AnimatedSection 
       id="cta" 
-      className="py-16 md:py-24 bg-gray-900 text-white border-t border-b border-gray-800"
+      className="py-16 md:py-24 bg-[#0A0A0A] text-white border-t border-b border-[#0A0A0A]"
     >
       <div className="container mx-auto px-6 text-center">
         <h2 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight">
@@ -362,7 +362,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer id="footer" className="py-12 md:py-16 bg-black border-t border-gray-800 text-gray-400">
+    <footer id="footer" className="py-12 md:py-16 bg-[#0A0A0A] border-t border-[#0A0A0A] text-gray-400">
       <div className="container mx-auto px-6">
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           <div>
