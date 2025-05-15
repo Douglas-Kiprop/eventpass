@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Twitter, Send, MessageSquare, ShieldCheck, Network, Users, Rocket } from 'lucide-react';
 import AnimatedSection from '../components/AnimatedSection'; // Assuming you created it in src/components
+import Image from 'next/image'; // Import Image component
 
 const Navbar = () => {
   return (
@@ -71,10 +72,36 @@ const HeroSection = () => {
 
 const CredibilitySection = () => {
   const partnerLogos = [
-    { name: 'Base', src: '/logos/base-logo-in-blue.svg', alt: 'Base Blockchain', icon: null }, 
-    { name: 'MetaMask', src: '/logos/MetaMask-icon-fox.svg', alt: 'MetaMask', icon: null }, 
-    { name: 'Coinbase Wallet', src: '/logos/coinbase.svg', alt: 'Coinbase Wallet', icon: null }, 
-    { name: 'Security Audit Inc.', src: null, alt: 'Security Audit Partner', icon: <ShieldCheck size={40} className="text-purple-400" /> },
+    { 
+      name: 'Base', 
+      src: '/logos/base-logo-in-blue.svg', 
+      alt: 'Base Blockchain', 
+      icon: null,
+      width: 40,  // Adjusted based on SVG viewBox
+      height: 40  // Maintain aspect ratio
+    },
+    { 
+      name: 'MetaMask', 
+      src: '/logos/MetaMask-icon-fox.svg', 
+      alt: 'MetaMask', 
+      icon: null,
+      width: 40,  // Adjusted based on SVG aspect ratio
+      height: 38  // Maintain original proportions
+    },
+    { 
+      name: 'Coinbase Wallet', 
+      src: '/logos/coinbase.svg', 
+      alt: 'Coinbase Wallet', 
+      icon: null,
+      width: 40,  // Adjusted to match other logos
+      height: 40  // SVG is square
+    },
+    { 
+      name: 'Security Audit Inc.', 
+      src: null, 
+      alt: 'Security Audit Partner', 
+      icon: <ShieldCheck size={40} className="text-purple-400" />
+    }
   ];
 
   return (
@@ -90,10 +117,16 @@ const CredibilitySection = () => {
                 <div className="mb-2 h-10 flex items-center justify-center">{logo.icon}</div>
               ) : (
                 <div className="mb-2 h-10 flex items-center justify-center">
-                  <img src={logo.src} alt={logo.alt} className="h-10 object-contain" /> 
+                  <Image 
+                    src={logo.src} 
+                    alt={logo.alt} 
+                    width={logo.width} 
+                    height={logo.height} 
+                    style={{ objectFit: 'contain' }}
+                  />
                 </div>
               )}
-              <span className="text-gray-400 text-sm text-center mt-2">{logo.alt}</span> 
+              <span className="text-gray-400 text-sm text-center mt-2">{logo.alt}</span>
             </div>
           ))}
         </div>
@@ -122,7 +155,16 @@ const FeaturesSection = () => {
         <div className="grid md:grid-cols-3 gap-8">
           {featuredEvents.map((event) => (
             <div key={event.id} className="bg-gray-900/70 border border-gray-800 rounded-xl shadow-2xl overflow-hidden transform hover:scale-105 hover:shadow-purple-500/30 transition-all duration-300 flex flex-col backdrop-blur-sm">
-              <img src={event.image} alt={event.name} className="w-full h-56 object-cover" />
+              {/* <img src={event.image} alt={event.name} className="w-full h-56 object-cover" /> */}
+              <div className="relative w-full h-56"> {/* Add a relative container for Image */} 
+                <Image 
+                  src={event.image} 
+                  alt={event.name} 
+                  layout="fill" 
+                  objectFit="cover" 
+                  className="w-full h-full"
+                />
+              </div>
               <div className="p-6 flex flex-col flex-grow">
                 <h3 className="text-2xl font-semibold mb-2 text-white">{event.name}</h3>
                 <p className="text-sm text-purple-400 font-medium mb-3">{event.date}</p>
@@ -149,7 +191,7 @@ const WhyChooseUsSection = () => {
     {
       icon: <ShieldCheck size={32} className="text-purple-400" />, // Updated icon
       title: 'Enhanced Security',
-      description: 'Drastically reduce fraud and scalping with verifiable NFT tickets you truly own.',
+      description: 'Drastically reduce fraud and scalping with verifiable NFT tickets you genuinely own.',
     },
     {
       icon: <Users size={32} className="text-purple-400" />, // Updated icon
@@ -259,24 +301,46 @@ const FAQSection = () => {
 
   const faqs = [
     {
-      question: 'What is EventPass?',
-      answer: 'EventPass is a decentralized platform for creating, managing, and attending events using NFT tickets. It offers enhanced security, transparency, and true ownership of your event access.'
+      question: 'What is EventPass and how does it work?',
+      answer: (
+        <>
+          EventPass is a decentralized platform for event ticketing using NFT technology. Organizers can create and manage events, while attendees can purchase NFT tickets that offer true ownership and enhanced security.
+          <br /><br />
+          Our platform aims to eliminate common ticketing issues like fraud, scalping, and lack of transparency by leveraging the power of blockchain.
+        </>
+      )
     },
     {
-      question: 'How do NFT tickets work?',
-      answer: 'NFT tickets are unique digital assets stored on the blockchain. They prove your right to attend an event and can be securely bought, sold, or transferred. This technology helps prevent fraud and scalping.'
+      question: 'How do I buy an NFT ticket?',
+      answer: 'Once you find an event you&apos;re interested in, connect your Web3 wallet (like MetaMask or Coinbase Wallet). Ensure you have enough cryptocurrency (e.g., ETH on Base Sepolia testnet for now) to cover the ticket price and any gas fees. Click the "Mint Ticket" or "Buy Ticket" button, approve the transaction in your wallet, and the NFT ticket will be transferred to your address. You can then view it in your wallet or on your "My Tickets" page on EventPass.'
     },
     {
-      question: 'What blockchain is EventPass built on?',
-      answer: 'EventPass is built on the Base blockchain, an Ethereum Layer 2 solution, ensuring low transaction fees and fast confirmations while maintaining security.'
+      question: 'What are the benefits of NFT tickets?',
+      answer: 'NFT tickets offer several advantages: <ul class="list-disc list-inside space-y-1 mt-2"><li><strong>True Ownership:</strong> You genuinely own your ticket, not just a license to attend.</li><li><strong>Enhanced Security:</strong> Reduces fraud and counterfeiting due to blockchain&apos;s immutability.</li><li><strong>Transparency:</strong> All transactions are recorded on the blockchain.</li><li><strong>Resale Potential:</strong> Depending on event policies, you might be able to resell your ticket on secondary marketplaces.</li><li><strong>Collectibles:</strong> NFT tickets can become digital collectibles or memorabilia.</li></ul>'
     },
     {
-      question: 'Can I resell my NFT ticket?',
-      answer: 'Yes, depending on the event organizer\'s settings, you may be able to resell your NFT ticket on compatible marketplaces. EventPass aims to provide a transparent and fair secondary market.'
+      question: 'Which blockchain does EventPass use?',
+      answer: 'EventPass is currently built on the Base Sepolia testnet. This allows us to test and refine the platform. We plan to support mainnet Base and potentially other blockchains in the future for live, real-world events.'
     },
     {
-      question: 'How do I create an event on EventPass?',
-      answer: 'Event organizers can use our intuitive dashboard to set up their event, define ticket tiers, customize NFT artwork, and manage sales. Sign up for early access to learn more!'
+      question: 'What if I lose access to my wallet?',
+      answer: 'Your NFT tickets are stored in your Web3 wallet. It is crucial to keep your wallet&apos;s seed phrase (recovery phrase) and private keys secure and backed up. Losing access to your wallet means losing access to your NFT tickets, similar to losing physical cash or tickets. EventPass cannot recover tickets if you lose access to your wallet, as we do not control your private keys.'
+    },
+    {
+      question: 'Can I get a refund for my NFT ticket?',
+      answer: 'Refund policies are typically set by the event organizers. EventPass, as a platform, facilitates the creation and sale of NFT tickets but does not generally handle refunds directly unless specified. Please check the terms and conditions for each specific event. Some NFT tickets might be resalable on secondary markets if the organizer enables this feature.'
+    },
+    {
+      question: 'How does EventPass prevent scalping?',
+      answer: 'While blockchain provides transparency, preventing scalping entirely is complex. EventPass can support organizers in implementing various strategies, such as setting resale royalties, limiting the number of tickets per wallet, or using dynamic pricing models. The transparency of NFT transactions can also help identify and discourage unfair scalping practices.'
+    },
+    {
+      question: 'What are gas fees?',
+      answer: 'Gas fees are transaction fees paid to network validators to process and confirm transactions on the blockchain. When you mint or transfer an NFT ticket, a gas fee is required. These fees can vary based on network congestion. EventPass operates on Base Sepolia (a testnet), where gas fees are typically very low or free, but for mainnet transactions, real gas fees will apply.'
+    },
+    {
+      question: 'Is EventPass secure?',
+      answer: 'Security is a top priority. Our smart contracts are developed with best practices in mind and we aim to conduct thorough audits before any mainnet deployment. NFT technology itself offers enhanced security over traditional tickets. However, users must also practice good digital security, such as protecting their wallet keys. It&apos;s secure, transparent, and prevents fraud.' // Corrected line
     }
   ];
 
@@ -333,7 +397,7 @@ const CTASection = () => {
           Ready to <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">Experience the Future</span>?
         </h2>
         <p className="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
-          Join EventPass today and unlock a new era of secure, transparent, and unforgettable live experiences. Whether you're an attendee or an organizer, the revolution starts now.
+          Join EventPass today and unlock a new era of secure, transparent, and unforgettable live experiences. Whether you&apos;re an attendee or an organizer, the revolution starts now.
         </p>
         <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
           <Link 

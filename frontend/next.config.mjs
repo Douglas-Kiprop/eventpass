@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Ensure no webpack key is present if using Turbopack for dev
+  // Remove or comment out these lines:
+  // output: 'export',
+  // images: {
+  //   unoptimized: true,
+  // }
 };
 
 export default nextConfig; // Use ES Module export

@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { useAccount } from 'wagmi';
-// Removed ethers imports as they are replaced by Alchemy SDK for this task
-import { Alchemy, Network, Nft } from 'alchemy-sdk'; // <-- Import Alchemy SDK
+import { Alchemy, Network, Nft } from 'alchemy-sdk';
+import Image from 'next/image'; // Import Image component
 
 // ABI import might not be needed here anymore unless used elsewhere
 // import TicketNFTAbi from '../../contracts/abi/TicketNFT.json';s
@@ -188,17 +188,22 @@ const MyTicketsPage: React.FC = () => {
           {ownedTickets.map((ticket) => (
             <div key={ticket.tokenId} className="border rounded-lg overflow-hidden shadow-lg bg-white dark:bg-gray-800">
               {ticket.metadata?.image ? (
-                <img
-                  // Use the already resolved image URI from metadata
-                  src={ticket.metadata.image}
-                  alt={ticket.metadata.name || `Ticket #${ticket.tokenId}`}
-                  className="w-full h-48 object-cover"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.onerror = null;
-                    target.src = '/event-placeholder.png'; // Ensure fallback exists
-                  }}
-                />
+                <div className="relative w-full h-48"> {/* Add a relative container for Image */} 
+                  <Image
+                    src={resolveIpfsUri(ticket.metadata.image)} // Ensure URI is resolved
+                    alt={ticket.metadata.name || `Ticket #${ticket.tokenId}`}
+                    layout="fill"
+                    objectFit="cover"
+                    className="w-full h-full"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.onerror = null;
+                      // For Next/Image, placeholder or fallback might be handled differently
+                      // or you might need to set a state to render a placeholder component
+                      target.src = '/event-placeholder.png'; 
+                    }}
+                  />
+                </div>
               ) : (
                 <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                   <span className="text-gray-500">No Image</span>

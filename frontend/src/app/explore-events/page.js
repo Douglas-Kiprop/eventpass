@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image'; // Import Image component
 
 // Placeholder data for events - we'll fetch this dynamically later
 const sampleEvents = [
@@ -46,7 +47,15 @@ const sampleEvents = [
 const EventCard = ({ event }) => {
   return (
     <div className="bg-gray-800/70 border border-gray-700 rounded-xl shadow-2xl overflow-hidden transform hover:scale-105 hover:shadow-purple-500/40 transition-all duration-300 flex flex-col backdrop-blur-sm">
-      <img src={event.image} alt={event.name} className="w-full h-56 object-cover" />
+      <div className="relative w-full h-56"> {/* Add a relative container for Image */} 
+        <Image 
+          src={event.image} 
+          alt={event.name} 
+          layout="fill" // Makes the image fill the container
+          objectFit="cover" // Similar to object-cover
+          className="w-full h-full" // className can still be used for additional styling if needed
+        />
+      </div>
       <div className="p-6 flex flex-col flex-grow">
         <h3 className="text-2xl font-semibold mb-2 text-white">{event.name}</h3>
         <p className="text-sm text-purple-400 font-medium mb-1">{event.date}</p>

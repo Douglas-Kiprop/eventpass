@@ -96,7 +96,7 @@ export default function PrepareEventPage() {
         <div className="mb-8 p-6 bg-gray-700/50 rounded-lg">
           <h3 className="text-xl font-semibold text-center mb-4 text-indigo-300">Testnet Funds</h3>
           <p className="text-gray-300 mb-4 text-center text-sm">
-            You'll need Base Sepolia USDC and Sepolia ETH (for gas) to proceed.
+          You&apos;ll need Base Sepolia USDC and Sepolia ETH (for gas) to proceed.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <a 
