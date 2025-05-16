@@ -193,7 +193,8 @@ export default function EventPage() {
       setPurchaseStep('error');
       return;
     }
-    if (!eventPriceWei || eventPriceWei <= 0n) { // Use 0n for BigInt comparison
+    // Updated condition to correctly handle free events (price = 0)
+    if (typeof eventPriceWei !== 'bigint' || eventPriceWei < 0n) {
       setError('Event price is not available or invalid.');
       setPurchaseStep('error');
       return;
