@@ -96,7 +96,7 @@ export default function PrepareEventPage() {
         <div className="mb-8 p-6 bg-gray-700/50 rounded-lg">
           <h3 className="text-xl font-semibold text-center mb-4 text-indigo-300">Testnet Funds</h3>
           <p className="text-gray-300 mb-4 text-center text-sm">
-          You&apos;ll need Base Sepolia USDC and Sepolia ETH (for gas) to proceed.
+          You&apos;ll need Base Sepolia USDC and Base Sepolia ETH (for gas) to proceed.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <a 
@@ -108,12 +108,12 @@ export default function PrepareEventPage() {
               Get USDC (Base Sepolia)
             </a>
             <a 
-              href="https://cloud.google.com/application/web3/faucet/ethereum/sepolia"
+              href="https://portal.cdp.coinbase.com/products/faucet" // Updated Link
               target="_blank" 
               rel="noopener noreferrer" 
               className="block w-full bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded-md text-center transition duration-150 ease-in-out"
             >
-              Get ETH (Sepolia)
+              Get ETH (Base Sepolia) {/* Updated Text */}
             </a>
           </div>
           <div className="mt-6 p-3 bg-gray-600/70 rounded-md text-center">
